@@ -106,4 +106,4 @@ if __name__ == '__main__':
     logger.info("  /health -> Health check")
     logger.info("  /api/auth/status -> Authentication status API")
     
-    server.run(debug=True, host='0.0.0.0', port=8050)
+    server.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8050)))
