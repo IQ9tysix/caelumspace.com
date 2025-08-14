@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MyTopics.ng</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Left Column - Image Section */
+        .image-section {
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .image-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .image-content h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .image-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        /* Right Column - Form Section */
+        .form-section {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-subtitle {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4a5568;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-control.valid {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .form-control.invalid {
+            border-color: #f56565;
+            background: #fff5f5;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            transition: color 0.3s ease;
+        }
+
+        .form-control:focus + .input-icon {
+            color: #667eea;
+        }
+
+        .validation-message {
+            position: absolute;
+            bottom: -1.5rem;
+            left: 0;
+            font-size: 0.8rem;
+            color: #f56565;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .validation-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-right: 0.5rem;
+            transform: scale(1.2);
+            accent-color: #667eea;
+        }
+
+        .checkbox-wrapper label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin: 0;
+        }
+
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: white;
+            color: #718096;
+            font-size: 0.9rem;
+            padding: 0 1rem;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            color: #4a5568;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .google-btn:hover {
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath fill="%234285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/%3E%3Cpath fill="%2334A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/%3E%3Cpath fill="%23FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/%3E%3Cpath fill="%23EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/%3E%3C/svg%3E') no-repeat center;
+            background-size: contain;
+        }
+
+        .form-footer {
+            text-align: center;
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .form-links a:hover {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f7fafc;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer p {
+            color: #718096;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .image-section {
+                order: 2;
+                min-height: 300px;
+            }
+
+            .form-section {
+                order: 1;
+                padding: 2rem 1.5rem;
+            }
+
+            .image-content h2 {
+                font-size: 2rem;
+            }
+
+            .form-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #48bb78;
+            color: #2f855a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #f56565;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Column - Image Section -->
+        <div class="image-section">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            <div class="image-content">
+                <h2>Welcome Back</h2>
+                <p>Access your academic journey with MyTopics.ng - Your gateway to research excellence and academic success.</p>
+            </div>
+        </div>
+
+        <!-- Right Column - Form Section -->
+        <div class="form-section">
+            <div class="form-header">
+                <a href="index.html" class="logo">MyTopics.ng</a>
+                <h1 class="form-title">Sign In</h1>
+                <p class="form-subtitle">Access your account to continue your academic journey</p>
+            </div>
+
+            <form class="login-form" id="loginForm" novalidate>
+                <div class="success-message" id="successMessage"></div>
+                <div class="error-message" id="errorMessage"></div>
+
+                <div class="form-group">
+                    <label for="loginField">Email or Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="loginField" name="loginField" class="form-control" placeholder="Enter your email or username" autocomplete="username">
+                        <i class="fas fa-user input-icon"></i>
+                        <div class="validation-message" id="loginFieldError"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" autocomplete="current-password">
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            <i class="far fa-eye"></i>
+                        </button>
+                        <div class="validation-message" id="passwordError"></div>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">Sign In</span>
+                    <div class="btn-loading" id="btnLoading">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <button type="button" class="google-btn" id="googleSignIn">
+                    <div class="google-icon"></div>
+                    Sign in with Google
+                </button>
+
+                <div class="form-footer">
+                    <div class="form-links">
+                        <a href="signup.html">Create Account</a>
+                        <a href="index.html">Back to Home</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 MyTopics.ng. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="services.html">Services</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        class LoginForm {
+            constructor() {
+                this.form = document.getElementById('loginForm');
+                this.loginField = document.getElementById('loginField');
+                this.password = document.getElementById('password');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.btnLoading = document.getElementById('btnLoading');
+                this.btnText = document.querySelector('.btn-text');
+                this.passwordToggle = document.getElementById('passwordToggle');
+                this.rememberMe = document.getElementById('rememberMe');
+                this.googleSignIn = document.getElementById('googleSignIn');
+                
+                this.isSubmitting = false;
+                this.validationRules = {
+                    loginField: {
+                        required: true,
+                        minLength: 3,
+                        pattern: /^[a-zA-Z0-9@._-]+$/
+                    },
+                    password: {
+                        required: true,
+                        minLength: 6
+                    }
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.loadRememberedCredentials();
+                this.setupRealTimeValidation();
+            }
+
+            bindEvents() {
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Password toggle
+                this.passwordToggle.addEventListener('click', () => this.togglePassword());
+                
+                // Google Sign In
+                this.googleSignIn.addEventListener('click', () => this.handleGoogleSignIn());
+                
+                // Input focus effects
+                this.setupFocusEffects();
+                
+                // Enter key handling
+                this.form.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !this.isSubmitting) {
+                        this.handleSubmit(e);
+                    }
+                });
+            }
+
+            setupFocusEffects() {
+                const inputs = [this.loginField, this.password];
+                
+                inputs.forEach(input => {
+                    input.addEventListener('focus', () => {
+                        this.addFocusEffect(input);
+                    });
+                    
+                    input.addEventListener('blur', () => {
+                        this.removeFocusEffect(input);
+                        this.validateField(input);
+                    });
+                });
+            }
+
+            setupRealTimeValidation() {
+                const inputs = [this.loginField, this.password];
+                
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => {
+                        this.clearFieldError(input);
+                        if (input.value.length > 0) {
+                            this.validateField(input, false);
+                        }
+                    });
+                });
+            }
+
+            addFocusEffect(input) {
+                const wrapper = input.closest('.form-group');
+                const label = wrapper.querySelector('label');
+                
+                wrapper.classList.add('focused');
+                label.style.color = '#667eea';
+            }
+
+            removeFocusEffect(input) {
+                const wrapper = input.closest('.form-group');
+                const label = wrapper.querySelector('label');
+                
+                wrapper.classList.remove('focused');
+                label.style.color = '#4a5568';
+            }
+
+            validateField(input, showError = true) {
+                const fieldName = input.name;
+                const value = input.value.trim();
+                const rules = this.validationRules[fieldName];
+                
+                if (!rules) return true;
+
+                let isValid = true;
+                let errorMessage = '';
+
+                // Required validation
+                if (rules.required && !value) {
+                    isValid = false;
+                    errorMessage = `${this.getFieldLabel(fieldName)} is required`;
+                }
+                
+                // Length validation
+                else if (rules.minLength && value.length < rules.minLength) {
+                    isValid = false;
+                    errorMessage = `${this.getFieldLabel(fieldName)} must be at least ${rules.minLength} characters`;
+                }
+                
+                // Pattern validation
+                else if (rules.pattern && !rules.pattern.test(value)) {
+                    isValid = false;
+                    if (fieldName === 'loginField') {
+                        errorMessage = 'Please enter a valid email or username';
+                    }
+                }
+                
+                // Email specific validation for login field
+                else if (fieldName === 'loginField' && value.includes('@')) {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Please enter a valid email address';
+                    }
+                }
+
+                // Update UI based on validation result
+                if (isValid) {
+                    input.classList.remove('invalid');
+                    input.classList.add('valid');
+                    this.hideFieldError(input);
+                } else {
+                    input.classList.remove('valid');
+                    input.classList.add('invalid');
+                    if (showError) {
+                        this.showFieldError(input, errorMessage);
+                    }
+                }
+
+                return isValid;
+            }
+
+            getFieldLabel(fieldName) {
+                const labels = {
+                    loginField: 'Email/Username',
+                    password: 'Password'
+                };
+                return labels[fieldName] || fieldName;
+            }
+
+            showFieldError(input, message) {
+                const errorElement = document.getElementById(input.name + 'Error');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.classList.add('show');
+                }
+            }
+
+            hideFieldError(input) {
+                const errorElement = document.getElementById(input.name + 'Error');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+            }
+
+            clearFieldError(input) {
+                input.classList.remove('invalid', 'valid');
+                this.hideFieldError(input);
+            }
+
+            validateForm() {
+                const fields = [this.loginField, this.password];
+                let isValid = true;
+
+                fields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                return isValid;
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                if (this.isSubmitting) return;
+
+                // Validate form
+                if (!this.validateForm()) {
+                    this.showMessage('Please correct the errors below', 'error');
+                    return;
+                }
+
+                this.setSubmitting(true);
+
+                try {
+                    // Simulate API call
+                    const formData = {
+                        loginField: this.loginField.value.trim(),
+                        password: this.password.value,
+                        rememberMe: this.rememberMe.checked
+                    };
+
+                    const response = await this.simulateLogin(formData);
+                    
+                    if (response.success) {
+                        this.showMessage('Login successful! Redirecting...', 'success');
+                        
+                        // Save credentials if remember me is checked
+                        if (this.rememberMe.checked) {
+                            this.saveCredentials(formData.loginField);
+                        }
+                        
+                        // Simulate redirect after success
+                        setTimeout(() => {
+                            // window.location.href = 'dashboard.php';
+                            console.log('Redirecting to dashboard...');
+                        }, 2000);
+                    } else {
+                        throw new Error(response.message || 'Login failed');
+                    }
+                } catch (error) {
+                    this.showMessage(error.message, 'error');
+                } finally {
+                    this.setSubmitting(false);
+                }
+            }
+
+            async simulateLogin(formData) {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simulate different responses based on input
+                if (formData.loginField === 'demo@mytopics.ng' && formData.password === 'demo123') {
+                    return { success: true, message: 'Login successful' };
+                } else if (formData.loginField === 'admin' && formData.password === 'admin123') {
+                    return { success: true, message: 'Admin login successful' };
+                } else {
+                    return { success: false, message: 'Invalid credentials. Try demo@mytopics.ng / demo123' };
+                }
+            }
+
+            setSubmitting(isSubmitting) {
+                this.isSubmitting = isSubmitting;
+                
+                if (isSubmitting) {
+                    this.submitBtn.disabled = true;
+                    this.btnText.style.opacity = '0';
+                    this.btnLoading.style.display = 'block';
+                } else {
+                    this.submitBtn.disabled = false;
+                    this.btnText.style.opacity = '1';
+                    this.btnLoading.style.display = 'none';
+                }
+            }
+
+            showMessage(message, type) {
+                const successEl = document.getElementById('successMessage');
+                const errorEl = document.getElementById('errorMessage');
+                
+                // Hide both messages first
+                successEl.style.display = 'none';
+                errorEl.style.display = 'none';
+                
+                if (type === 'success') {
+                    successEl.textContent = message;
+                    successEl.style.display = 'block';
+                    setTimeout(() => successEl.style.display = 'none', 5000);
+                } else {
+                    errorEl.textContent = message;
+                    errorEl.style.display = 'block';
+                    setTimeout(() => errorEl.style.display = 'none', 5000);
+                }
+            }
+
+            togglePassword() {
+                const type = this.password.type === 'password' ? 'text' : 'password';
+                this.password.type = type;
+                
+                const icon = this.passwordToggle.querySelector('i');
+                if (type === 'password') {
+                    icon.className = 'far fa-eye';
+                } else {
+                    icon.className = 'far fa-eye-slash';
+                }
+            }
+
+            saveCredentials(loginField) {
+                // Note: In a real application, you would use secure storage
+                const credentials = {
+                    loginField: loginField,
+                    timestamp: Date.now()
+                };
+                
+                // Using a simple object for demo purposes
+                window.rememberedCredentials = credentials;
+                console.log('Credentials saved for remember me functionality');
+            }
+
+            loadRememberedCredentials() {
+                // Check for remembered credentials
+                if (window.rememberedCredentials) {
+                    const credentials = window.rememberedCredentials;
+                    const daysSinceLogin = (Date.now() - credentials.timestamp) / (1000 * 60 * 60 * 24);
+                    
+                    // Auto-fill if less than 30 days
+                    if (daysSinceLogin < 30) {
+                        this.loginField.value = credentials.loginField;
+                        this.rememberMe.checked = true;
+                    }
+                }
+            }
+
+            async handleGoogleSignIn() {
+                try {
+                    // Disable button during processing
+                    this.googleSignIn.disabled = true;
+                    this.googleSignIn.style.opacity = '0.7';
+                    
+                    // Simulate Google OAuth flow
+                    this.showMessage('Redirecting to Google...', 'success');
+                    
+                    // In a real application, this would integrate with Google OAuth
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Simulate successful Google authentication
+                    const googleUser = {
+                        email: 'user@gmail.com',
+                        name: 'Google User',
+                        picture: 'https://via.placeholder.com/40'
+                    };
+                    
+                    this.showMessage(`Welcome ${googleUser.name}! Redirecting...`, 'success');
+                    
+                    setTimeout(() => {
+                        // window.location.href = 'dashboard.php';
+                        console.log('Google sign-in successful, redirecting to dashboard...');
+                    }, 2000);
+                    
+                } catch (error) {
+                    this.showMessage('Google sign-in failed. Please try again.', 'error');
+                } finally {
+                    // Re-enable button
+                    this.googleSignIn.disabled = false;
+                    this.googleSignIn.style.opacity = '1';
+                }
+            }
+        }
+
+        // Advanced form interactions and animations
+        class FormAnimations {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupParallaxEffect();
+                this.setupInputAnimations();
+                this.setupLoadingAnimations();
+                this.setupHoverEffects();
+            }
+
+            setupParallaxEffect() {
+                // Subtle parallax effect on scroll for floating elements
+                window.addEventListener('scroll', () => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxElements = document.querySelectorAll('.floating-element');
+                    
+                    parallaxElements.forEach((element, index) => {
+                        const speed = 0.5 + (index * 0.1);
+                        element.style.transform = `translateY(${scrolled * speed}px)`;
+                    });
+                });
+            }
+
+            setupInputAnimations() {
+                const inputs = document.querySelectorAll('.form-control');
+                
+                inputs.forEach(input => {
+                    // Floating label effect
+                    input.addEventListener('focus', () => {
+                        const wrapper = input.closest('.form-group');
+                        wrapper.classList.add('input-focused');
+                    });
+                    
+                    input.addEventListener('blur', () => {
+                        const wrapper = input.closest('.form-group');
+                        if (!input.value) {
+                            wrapper.classList.remove('input-focused');
+                        }
+                    });
+                    
+                    // Ripple effect on click
+                    input.addEventListener('click', (e) => {
+                        this.createRipple(e, input);
+                    });
+                });
+            }
+
+            createRipple(event, element) {
+                const ripple = document.createElement('span');
+                const rect = element.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(102, 126, 234, 0.3);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    left: ${x}px;
+                    top: ${y}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    pointer-events: none;
+                `;
+                
+                element.style.position = 'relative';
+                element.style.overflow = 'hidden';
+                element.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+
+            setupLoadingAnimations() {
+                // Enhanced loading animations
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes ripple {
+                        to {
+                            transform: scale(2);
+                            opacity: 0;
+                        }
+                    }
+                    
+                    @keyframes pulse {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.5; }
+                    }
+                    
+                    .input-focused label {
+                        transform: translateY(-8px) scale(0.9);
+                        color: #667eea !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            setupHoverEffects() {
+                // Enhanced hover effects for interactive elements
+                const interactiveElements = document.querySelectorAll('button, a, input[type="checkbox"]');
+                
+                interactiveElements.forEach(element => {
+                    element.addEventListener('mouseenter', () => {
+                        element.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    });
+                });
+            }
+        }
+
+        // Form validation utilities
+        class ValidationUtils {
+            static isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            static isValidUsername(username) {
+                const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+                return usernameRegex.test(username);
+            }
+
+            static getPasswordStrength(password) {
+                let strength = 0;
+                const checks = [
+                    /.{8,}/, // At least 8 characters
+                    /[a-z]/, // Lowercase letter
+                    /[A-Z]/, // Uppercase letter
+                    /[0-9]/, // Number
+                    /[^a-zA-Z0-9]/ // Special character
+                ];
+                
+                checks.forEach(check => {
+                    if (check.test(password)) strength++;
+                });
+                
+                return {
+                    score: strength,
+                    level: strength < 2 ? 'weak' : strength < 4 ? 'medium' : 'strong'
+                };
+            }
+
+            static sanitizeInput(input) {
+                return input.trim().replace(/[<>\"']/g, '');
+            }
+        }
+
+        // Security utilities
+        class SecurityUtils {
+            static hashPassword(password) {
+                // Simple hash function for demo (use proper hashing in production)
+                let hash = 0;
+                if (password.length === 0) return hash;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32-bit integer
+                }
+                return hash.toString();
+            }
+
+            static generateCSRFToken() {
+                return Math.random().toString(36).substring(2, 15) + 
+                       Math.random().toString(36).substring(2, 15);
+            }
+
+            static rateLimit() {
+                const attempts = parseInt(sessionStorage.getItem('loginAttempts') || '0');
+                const lastAttempt = parseInt(sessionStorage.getItem('lastLoginAttempt') || '0');
+                const now = Date.now();
+                
+                // Reset attempts after 15 minutes
+                if (now - lastAttempt > 15 * 60 * 1000) {
+                    sessionStorage.setItem('loginAttempts', '0');
+                    return true;
+                }
+                
+                // Allow up to 5 attempts
+                if (attempts >= 5) {
+                    const timeLeft = Math.ceil((15 * 60 * 1000 - (now - lastAttempt)) / 1000 / 60);
+                    throw new Error(`Too many login attempts. Please try again in ${timeLeft} minutes.`);
+                }
+                
+                sessionStorage.setItem('loginAttempts', (attempts + 1).toString());
+                sessionStorage.setItem('lastLoginAttempt', now.toString());
+                return true;
+            }
+        }
+
+        // Accessibility enhancements
+        class AccessibilityEnhancements {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupKeyboardNavigation();
+                this.setupAriaLabels();
+                this.setupFocusManagement();
+                this.setupScreenReaderSupport();
+            }
+
+            setupKeyboardNavigation() {
+                // Tab navigation enhancement
+                const focusableElements = document.querySelectorAll(
+                    'input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+                );
+                
+                focusableElements.forEach((element, index) => {
+                    element.addEventListener('keydown', (e) => {
+                        if (e.key === 'Tab') {
+                            // Custom tab handling if needed
+                        }
+                        
+                        if (e.key === 'Enter' && element.tagName !== 'BUTTON') {
+                            if (element.type !== 'submit') {
+                                e.preventDefault();
+                                const nextElement = focusableElements[index + 1];
+                                if (nextElement) {
+                                    nextElement.focus();
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+
+            setupAriaLabels() {
+                // Enhanced ARIA labels and descriptions
+                const loginField = document.getElementById('loginField');
+                const password = document.getElementById('password');
+                
+                loginField.setAttribute('aria-describedby', 'loginFieldError');
+                password.setAttribute('aria-describedby', 'passwordError');
+                
+                // Live region for announcements
+                const liveRegion = document.createElement('div');
+                liveRegion.setAttribute('aria-live', 'polite');
+                liveRegion.setAttribute('aria-atomic', 'true');
+                liveRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+                document.body.appendChild(liveRegion);
+                
+                window.announceToScreenReader = (message) => {
+                    liveRegion.textContent = message;
+                };
+            }
+
+            setupFocusManagement() {
+                // Focus management for better UX
+                let focusHistory = [];
+                
+                document.addEventListener('focusin', (e) => {
+                    focusHistory.push(e.target);
+                    if (focusHistory.length > 10) {
+                        focusHistory = focusHistory.slice(-10);
+                    }
+                });
+                
+                // Focus trap for modal-like behavior if needed
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        const activeElement = document.activeElement;
+                        if (activeElement && activeElement.blur) {
+                            activeElement.blur();
+                        }
+                    }
+                });
+            }
+
+            setupScreenReaderSupport() {
+                // Enhanced screen reader support
+                const form = document.getElementById('loginForm');
+                form.setAttribute('aria-label', 'Login form');
+                
+                // Progress announcements
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.addEventListener('click', () => {
+                    setTimeout(() => {
+                        if (window.announceToScreenReader) {
+                            window.announceToScreenReader('Processing login request');
+                        }
+                    }, 100);
+                });
+            }
+        }
+
+        // Performance optimizations
+        class PerformanceOptimizer {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupLazyLoading();
+                this.setupDebouncing();
+                this.preloadCriticalResources();
+            }
+
+            setupLazyLoading() {
+                // Intersection Observer for lazy loading
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                // Load additional resources when needed
+                                entry.target.classList.add('loaded');
+                            }
+                        });
+                    });
+                    
+                    document.querySelectorAll('.lazy-load').forEach(el => {
+                        observer.observe(el);
+                    });
+                }
+            }
+
+            setupDebouncing() {
+                // Debounced validation for better performance
+                const debounce = (func, wait) => {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                };
+                
+                window.debouncedValidation = debounce((input) => {
+                    // Validation logic here
+                }, 300);
+            }
+
+            preloadCriticalResources() {
+                // Preload critical resources
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+                link.as = 'style';
+                document.head.appendChild(link);
+            }
+        }
+
+        // Initialize all components when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize main login form
+            new LoginForm();
+            
+            // Initialize animations and effects
+            new FormAnimations();
+            
+            // Initialize accessibility enhancements
+            new AccessibilityEnhancements();
+            
+            // Initialize performance optimizations
+            new PerformanceOptimizer();
+            
+            // Add page load animation
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // Console welcome message
+            console.log('%c🚀 MyTopics.ng Login Page Loaded Successfully!', 
+                       'color: #667eea; font-size: 16px; font-weight: bold;');
+            console.log('%cDemo Credentials:', 'color: #48bb78; font-weight: bold;');
+            console.log('Email: demo@mytopics.ng | Password: demo123');
+            console.log('Username: admin | Password: admin123');
+        });
+
+        // Service Worker registration for PWA capabilities
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

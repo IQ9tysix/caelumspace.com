@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced JavaScript Patterns - Lesson 3</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 30px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px 20px;
+            height: fit-content;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .series-info {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .series-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .lesson-progress {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 60%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .lesson-list {
+            list-style: none;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .lesson-item:hover {
+            background: #f7fafc;
+            transform: translateX(5px);
+        }
+
+        .lesson-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .lesson-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .lesson-item.active .lesson-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .lesson-item.completed .lesson-number {
+            background: #48bb78;
+            color: white;
+        }
+
+        .lesson-content {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .lesson-duration {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lesson-header {
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .lesson-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lesson-info h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .lesson-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .tag.premium {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #744210;
+        }
+
+        .lesson-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lesson-actions {
+            display: flex;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn.primary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn.primary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Lesson Content Slider */
+        .lesson-slider {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .slide p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+            box-shadow: 20px 0 #ffbd2e, 40px 0 #27ca3f;
+        }
+
+        .quiz-slide {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .quiz-question {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quiz-option {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.selected {
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .quiz-option.correct {
+            background: rgba(72, 187, 120, 0.8);
+            border-color: #48bb78;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(245, 101, 101, 0.8);
+            border-color: #f56565;
+        }
+
+        /* Navigation Controls */
+        .slide-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: #4a5568;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructor-card {
+            text-align: center;
+        }
+
+        .instructor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .instructor-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .instructor-title {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 15px;
+        }
+
+        .instructor-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .message-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .message-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .social-share {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .social-btn.facebook {
+            background: #1877f2;
+            color: white;
+        }
+
+        .social-btn.linkedin {
+            background: #0077b5;
+            color: white;
+        }
+
+        .social-btn.copy {
+            background: #718096;
+            color: white;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .recommendation-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(5px);
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+
+        .rec-thumbnail {
+            width: 60px;
+            height: 45px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .rec-content {
+            flex: 1;
+        }
+
+        .rec-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .rec-meta {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 250px 1fr 250px;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar, .right-sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .lesson-header {
+                padding: 20px;
+            }
+            
+            .lesson-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .lesson-actions {
+                flex-wrap: wrap;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h2 {
+                font-size: 20px;
+            }
+            
+            .quiz-options {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar - Lesson Navigation -->
+        <aside class="sidebar">
+            <div class="series-info">
+                <h3 class="series-title">JavaScript Mastery Series</h3>
+                <div class="lesson-progress">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="progress-text">3 of 5 lessons completed</div>
+            </div>
+            
+            <ul class="lesson-list">
+                <li class="lesson-item completed">
+                    <div class="lesson-number">1</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">Introduction to ES6</div>
+                        <div class="lesson-duration">45 min</div>
+                    </div>
+                </li>
+                <li class="lesson-item completed">
+                    <div class="lesson-number">2</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">Async/Await Patterns</div>
+                        <div class="lesson-duration">38 min</div>
+                    </div>
+                </li>
+                <li class="lesson-item active">
+                    <div class="lesson-number">3</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">Advanced Closure Techniques</div>
+                        <div class="lesson-duration">52 min</div>
+                    </div>
+                </li>
+                <li class="lesson-item">
+                    <div class="lesson-number">4</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">Design Patterns</div>
+                        <div class="lesson-duration">41 min</div>
+                    </div>
+                </li>
+                <li class="lesson-item">
+                    <div class="lesson-number">5</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">Performance Optimization</div>
+                        <div class="lesson-duration">55 min</div>
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="lesson-header">
+                <div class="lesson-meta">
+                    <div class="lesson-info">
+                        <h1>Advanced Closure Techniques</h1>
+                        <div class="lesson-tags">
+                            <span class="tag premium"><i class="fas fa-crown"></i> Premium</span>
+                            <span class="tag">Intermediate</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <div class="lesson-stats">
+                            <div class="stat">
+                                <i class="far fa-clock"></i>
+                                <span>52 min</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-users"></i>
+                                <span>2.1k students</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-star"></i>
+                                <span>4.8 rating</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn primary">
+                            <i class="fas fa-bookmark"></i>
+                            Save
+                        </button>
+                        <button class="action-btn secondary">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lesson-slider">
+                <!-- Slide 1: Introduction -->
+                <div class="slide active">
+                    <h2>Understanding Closures in Depth</h2>
+                    <p>Closures are one of JavaScript's most powerful features, yet they're often misunderstood. In this lesson, we'll explore advanced closure techniques that will transform how you write JavaScript code.</p>
+                    <p>A closure gives you access to an outer function's scope from an inner function. This creates a persistent scope chain that can be leveraged for powerful programming patterns.</p>
+                    <div class="code-block">
+function outerFunction(x) {
+    // This is the outer function's scope
+    
+    function innerFunction(y) {
+        // This inner function has access to 'x'
+        return x + y;
+    }
+    
+    return innerFunction;
+}
+
+const addFive = outerFunction(5);
+console.log(addFive(3)); // 8
+                    </div>
+                </div>
+
+                <!-- Slide 2: Practical Example -->
+                <div class="slide">
+                    <h2>The Module Pattern</h2>
+                    <p>One of the most powerful applications of closures is the Module Pattern. This pattern allows you to create private variables and methods, exposing only what you want to be public.</p>
+                    <div class="code-block">
+const CounterModule = (function() {
+    let count = 0; // Private variable
+    
+    return {
+        increment: function() {
+            count++;
+            return count;
+        },
+        decrement: function() {
+            count--;
+            return count;
+        },
+        getCount: function() {
+            return count;
+        }
+    };
+})();
+
+console.log(CounterModule.increment()); // 1
+console.log(CounterModule.getCount()); // 1
+                    </div>
+                    <p>Notice how 'count' is completely private and can only be accessed through the exposed methods.</p>
+                </div>
+
+                <!-- Quiz Slide -->
+                <div class="slide quiz-slide">
+                    <h2 class="quiz-question">What will be the output of this code?</h2>
+                    <div class="code-block">
+function createMultiplier(multiplier) {
+    return function(x) {
+        return x * multiplier;
+    };
+}
+
+const double = createMultiplier(2);
+console.log(double(5));
+                    </div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-answer="a">A) 10</div>
+                        <div class="quiz-option" data-answer="b">B) 5</div>
+                        <div class="quiz-option" data-answer="c">C) 2</div>
+                        <div class="quiz-option" data-answer="d">D) undefined</div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Advanced Techniques -->
+                <div class="slide">
+                    <h2>Closure in Event Handlers</h2>
+                    <p>Closures are particularly useful in event handling scenarios where you need to maintain state across multiple function calls.</p>
+                    <div class="code-block">
+function createButtonHandler(name) {
+    let clickCount = 0;
+    
+    return function() {
+        clickCount++;
+        console.log(`${name} clicked ${clickCount} times`);
+    };
+}
+
+const loginHandler = createButtonHandler('Login Button');
+const signupHandler = createButtonHandler('Signup Button');
+
+// Each handler maintains its own click count
+document.getElementById('login').onclick = loginHandler;
+document.getElementById('signup').onclick = signupHandler;
+                    </div>
+                    <p>Each button maintains its own independent click counter thanks to closures!</p>
+                </div>
+
+                <!-- Slide 4: Memory Considerations -->
+                <div class="slide">
+                    <h2>Memory Management with Closures</h2>
+                    <p>While closures are powerful, they can lead to memory leaks if not handled properly. Here's what you need to know:</p>
+                    <p><strong>The Problem:</strong> Closures keep references to their outer scope, preventing garbage collection.</p>
+                    <div class="code-block">
+// Potential memory leak
+function attachListeners() {
+    const hugeArray = new Array(1000000).fill('data');
+    
+    document.getElementById('button').addEventListener('click', function() {
+        // This closure keeps hugeArray in memory
+        console.log('Button clicked');
+    });
+}
+
+// Better approach
+function attachListeners() {
+    const hugeArray = new Array(1000000).fill('data');
+    
+    function clickHandler() {
+        console.log('Button clicked');
+        // No reference to hugeArray
+    }
+    
+    document.getElementById('button').addEventListener('click', clickHandler);
+    // hugeArray can be garbage collected
+}
+                    </div>
+                </div>
+
+                <!-- Final Quiz -->
+                <div class="slide quiz-slide">
+                    <h2 class="quiz-question">Which statement about closures is TRUE?</h2>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-answer="a">A) Closures only work with arrow functions</div>
+                        <div class="quiz-option" data-answer="b">B) Closures prevent all memory leaks</div>
+                        <div class="quiz-option" data-answer="c">C) Closures maintain access to outer scope variables</div>
+                        <div class="quiz-option" data-answer="d">D) Closures are only useful for private variables</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-controls">
+                <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <div class="slide-indicator">
+                    <div class="indicator-dot active"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot"></div>
+                </div>
+                <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <!-- Instructor Card -->
+            <div class="sidebar-card instructor-card">
+                <h3 class="card-title">
+                    <i class="fas fa-user-tie"></i>
+                    Instructor
+                </h3>
+                <div class="instructor-avatar">JD</div>
+                <div class="instructor-name">John Doe</div>
+                <div class="instructor-title">Senior JavaScript Developer</div>
+                <div class="instructor-rating">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span>4.9 (1.2k reviews)</span>
+                </div>
+                <button class="message-btn">
+                    <i class="fas fa-envelope"></i>
+                    Message Instructor
+                </button>
+            </div>
+
+            <!-- Social Share -->
+            <div class="sidebar-card">
+                <h3 class="card-title">
+                    <i class="fas fa-share-alt"></i>
+                    Share Lesson
+                </h3>
+                <div class="social-share">
+                    <button class="social-btn twitter"><i class="fab fa-twitter"></i></button>
+                    <button class="social-btn facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button class="social-btn linkedin"><i class="fab fa-linkedin-in"></i></button>
+                    <button class="social-btn copy"><i class="fas fa-link"></i></button>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="sidebar-card">
+                <h3 class="card-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Recommended
+                </h3>
+                <div class="recommendation-item">
+                    <div class="rec-thumbnail">04</div>
+                    <div class="rec-content">
+                        <div class="rec-title">Design Patterns in JavaScript</div>
+                        <div class="rec-meta">Next in series • 41 min</div>
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-thumbnail">ADV</div>
+                    <div class="rec-content">
+                        <div class="rec-title">Advanced Array Methods</div>
+                        <div class="rec-meta">Related topic • 35 min</div>
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-thumbnail">FUN</div>
+                    <div class="rec-content">
+                        <div class="rec-title">Functional Programming</div>
+                        <div class="rec-meta">Popular • 48 min</div>
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-thumbnail">OOP</div>
+                    <div class="rec-content">
+                        <div class="rec-title">Object-Oriented JavaScript</div>
+                        <div class="rec-meta">Trending • 52 min</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="sidebar-card">
+                <h3 class="card-title">
+                    <i class="fas fa-navigation"></i>
+                    Quick Navigation
+                </h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="action-btn primary" style="flex: 1;" id="prevLessonBtn">
+                        <i class="fas fa-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button class="action-btn primary" style="flex: 1;" id="nextLessonBtn">
+                        <i class="fas fa-chevron-right"></i>
+                        Next
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Lesson slider functionality
+        class LessonSlider {
+            constructor() {
+                this.currentSlide = 0;
+                this.slides = document.querySelectorAll('.slide');
+                this.totalSlides = this.slides.length;
+                this.indicators = document.querySelectorAll('.indicator-dot');
+                this.prevBtn = document.getElementById('prevBtn');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.quizAnswers = { 2: 'a', 5: 'c' }; // Correct answers for quiz slides
+                
+                this.init();
+            }
+
+            init() {
+                this.updateSlide();
+                this.setupEventListeners();
+                this.setupQuizzes();
+            }
+
+            setupEventListeners() {
+                this.prevBtn.addEventListener('click', () => this.previousSlide());
+                this.nextBtn.addEventListener('click', () => this.nextSlide());
+                
+                this.indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => this.goToSlide(index));
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.previousSlide();
+                    if (e.key === 'ArrowRight') this.nextSlide();
+                });
+
+                // Lesson navigation
+                document.getElementById('prevLessonBtn').addEventListener('click', () => {
+                    this.showNotification('Loading previous lesson...', 'info');
+                });
+                
+                document.getElementById('nextLessonBtn').addEventListener('click', () => {
+                    this.showNotification('Loading next lesson...', 'info');
+                });
+
+                // Social sharing
+                document.querySelectorAll('.social-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const platform = e.target.closest('.social-btn').classList[1];
+                        this.shareLesson(platform);
+                    });
+                });
+
+                // Instructor messaging
+                document.querySelector('.message-btn').addEventListener('click', () => {
+                    this.showNotification('Message composer opened!', 'success');
+                });
+
+                // Lesson bookmarking
+                document.querySelector('.action-btn.primary').addEventListener('click', (e) => {
+                    const btn = e.target.closest('.action-btn');
+                    const icon = btn.querySelector('i');
+                    
+                    if (icon.classList.contains('fas')) {
+                        icon.classList.replace('fas', 'far');
+                        this.showNotification('Lesson removed from bookmarks', 'info');
+                    } else {
+                        icon.classList.replace('far', 'fas');
+                        this.showNotification('Lesson bookmarked!', 'success');
+                    }
+                });
+
+                // Recommendation clicks
+                document.querySelectorAll('.recommendation-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const title = item.querySelector('.rec-title').textContent;
+                        this.showNotification(`Loading: ${title}`, 'info');
+                    });
+                });
+            }
+
+            setupQuizzes() {
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        const slide = e.target.closest('.slide');
+                        const slideIndex = Array.from(this.slides).indexOf(slide);
+                        const selectedAnswer = e.target.dataset.answer;
+                        const correctAnswer = this.quizAnswers[slideIndex];
+                        
+                        // Remove previous selections
+                        slide.querySelectorAll('.quiz-option').forEach(opt => {
+                            opt.classList.remove('selected', 'correct', 'incorrect');
+                        });
+                        
+                        // Mark selected option
+                        e.target.classList.add('selected');
+                        
+                        // Show correct/incorrect after a delay
+                        setTimeout(() => {
+                            slide.querySelectorAll('.quiz-option').forEach(opt => {
+                                if (opt.dataset.answer === correctAnswer) {
+                                    opt.classList.add('correct');
+                                } else if (opt.classList.contains('selected') && opt.dataset.answer !== correctAnswer) {
+                                    opt.classList.add('incorrect');
+                                }
+                            });
+                            
+                            if (selectedAnswer === correctAnswer) {
+                                this.showNotification('Correct! Well done! 🎉', 'success');
+                            } else {
+                                this.showNotification('Not quite right. Try again! 💪', 'error');
+                            }
+                        }, 500);
+                    });
+                });
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides - 1) {
+                    this.currentSlide++;
+                    this.updateSlide();
+                }
+            }
+
+            previousSlide() {
+                if (this.currentSlide > 0) {
+                    this.currentSlide--;
+                    this.updateSlide();
+                }
+            }
+
+            goToSlide(index) {
+                this.currentSlide = index;
+                this.updateSlide();
+            }
+
+            updateSlide() {
+                // Update slide visibility
+                this.slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'prev');
+                    
+                    if (index === this.currentSlide) {
+                        slide.classList.add('active');
+                    } else if (index < this.currentSlide) {
+                        slide.classList.add('prev');
+                    }
+                });
+
+                // Update indicators
+                this.indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === this.currentSlide);
+                });
+
+                // Update navigation buttons
+                this.prevBtn.disabled = this.currentSlide === 0;
+                this.nextBtn.disabled = this.currentSlide === this.totalSlides - 1;
+
+                // Update progress
+                this.updateProgress();
+            }
+
+            updateProgress() {
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`;
+                }
+            }
+
+            shareLesson(platform) {
+                const lessonTitle = 'Advanced Closure Techniques';
+                const lessonUrl = window.location.href;
+                
+                let shareUrl = '';
+                
+                switch(platform) {
+                    case 'twitter':
+                        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Learning about ${lessonTitle}`)}&url=${encodeURIComponent(lessonUrl)}`;
+                        break;
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(lessonUrl)}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(lessonUrl)}`;
+                        break;
+                    case 'copy':
+                        navigator.clipboard.writeText(lessonUrl).then(() => {
+                            this.showNotification('Link copied to clipboard!', 'success');
+                        });
+                        return;
+                }
+                
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                }
+            }
+
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 10000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease, opacity 0.3s ease;
+                    max-width: 300px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                `;
+                
+                switch(type) {
+                    case 'success':
+                        notification.style.background = 'linear-gradient(135deg, #48bb78, #38a169)';
+                        break;
+                    case 'error':
+                        notification.style.background = 'linear-gradient(135deg, #f56565, #e53e3e)';
+                        break;
+                    case 'info':
+                    default:
+                        notification.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                        break;
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                // Animate out and remove
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 3000);
+            }
+        }
+
+        // Advanced animations and interactions
+        class LessonAnimations {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupScrollAnimations();
+                this.setupHoverEffects();
+                this.setupParallaxEffects();
+            }
+
+            setupScrollAnimations() {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.sidebar-card').forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(card);
+                });
+            }
+
+            setupHoverEffects() {
+                // Enhanced hover effects for lesson items
+                document.querySelectorAll('.lesson-item').forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                        item.style.transform = 'translateX(10px) scale(1.02)';
+                    });
+                    
+                    item.addEventListener('mouseleave', () => {
+                        item.style.transform = item.classList.contains('active') ? 'translateX(5px)' : 'translateX(0)';
+                    });
+                });
+
+                // Floating animation for action buttons
+                document.querySelectorAll('.action-btn').forEach(btn => {
+                    btn.addEventListener('mouseenter', () => {
+                        btn.style.transform = 'translateY(-3px) scale(1.05)';
+                    });
+                    
+                    btn.addEventListener('mouseleave', () => {
+                        btn.style.transform = 'translateY(0) scale(1)';
+                    });
+                });
+            }
+
+            setupParallaxEffects() {
+                window.addEventListener('scroll', () => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxElements = document.querySelectorAll('.lesson-header::before');
+                    
+                    parallaxElements.forEach(element => {
+                        const speed = 0.5;
+                        element.style.transform = `translateY(${scrolled * speed}px)`;
+                    });
+                });
+            }
+        }
+
+        // Enhanced lesson progress tracking
+        class LessonProgress {
+            constructor() {
+                this.progress = this.loadProgress();
+                this.init();
+            }
+
+            init() {
+                this.updateProgressDisplay();
+                this.trackSlideViews();
+            }
+
+            loadProgress() {
+                // In a real app, this would load from a backend
+                return {
+                    currentLesson: 3,
+                    totalLessons: 5,
+                    slidesViewed: new Set([0, 1]),
+                    quizzesCompleted: new Set(),
+                    timeSpent: 0
+                };
+            }
+
+            trackSlideViews() {
+                const slider = document.querySelector('.lesson-slider');
+                if (!slider) return;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const slideIndex = Array.from(entry.target.parentNode.children).indexOf(entry.target);
+                            this.progress.slidesViewed.add(slideIndex);
+                            this.updateProgressDisplay();
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                document.querySelectorAll('.slide').forEach(slide => {
+                    observer.observe(slide);
+                });
+            }
+
+            updateProgressDisplay() {
+                const progressPercentage = (this.progress.slidesViewed.size / document.querySelectorAll('.slide').length) * 100;
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = `${progressPercentage}%`;
+                }
+
+                // Update progress text
+                const progressText = document.querySelector('.progress-text');
+                if (progressText) {
+                    progressText.textContent = `${this.progress.currentLesson} of ${this.progress.totalLessons} lessons completed`;
+                }
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new LessonSlider();
+            new LessonAnimations();
+            new LessonProgress();
+            
+            // Add loading animation
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Performance optimization - lazy load recommendations
+        const lazyLoadRecommendations = () => {
+            const recommendationCards = document.querySelectorAll('.recommendation-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            recommendationCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                observer.observe(card);
+            });
+        };
+
+        // Initialize lazy loading
+        setTimeout(lazyLoadRecommendations, 500);
+    </script>
+</body>
+</html>

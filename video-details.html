@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Neural Networks in Computer Vision | Research Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Video Player Section */
+        .video-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .video-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .video-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.premium {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: #fff;
+        }
+
+        .badge.free {
+            background: linear-gradient(135deg, #00c851, #007e33);
+            color: #fff;
+        }
+
+        .badge.expert {
+            background: linear-gradient(135deg, #ff3547, #c41e3a);
+            color: #fff;
+        }
+
+        .badge.intermediate {
+            background: linear-gradient(135deg, #ffbb33, #ff8800);
+            color: #fff;
+        }
+
+        .badge.beginner {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #fff;
+        }
+
+        .video-player-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 212, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .play-overlay:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(0, 212, 255, 1);
+        }
+
+        .play-icon {
+            width: 30px;
+            height: 30px;
+            fill: white;
+            margin-left: 5px;
+        }
+
+        /* Chat-like Discussion Section */
+        .discussion-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .discussion-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .instructor-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .instructor-info h4 {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .instructor-info span {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #666, #888);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #00d4ff;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* Navigation Controls */
+        .video-controls {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #333, #555);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-indicator {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Series Videos */
+        .series-video {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+        }
+
+        .series-video:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .series-video.current {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+        }
+
+        .video-thumbnail {
+            width: 80px;
+            height: 45px;
+            background: linear-gradient(135deg, #333, #555);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #888;
+            flex-shrink: 0;
+        }
+
+        .video-info h5 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .video-duration {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        /* Recommendations */
+        .recommendation {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .recommendation:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .rec-thumbnail {
+            width: 60px;
+            height: 35px;
+            background: linear-gradient(135deg, #444, #666);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .rec-info h6 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .rec-meta {
+            font-size: 10px;
+            color: #888;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+            }
+            
+            .sidebar {
+                grid-row: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                gap: 20px;
+            }
+            
+            .video-section {
+                padding: 20px;
+            }
+            
+            .video-player-container {
+                height: 250px;
+            }
+            
+            .video-title {
+                font-size: 22px;
+            }
+            
+            .video-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.5);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.8);
+        }
+
+        /* Floating Elements */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <main class="main-content">
+            <!-- Video Section -->
+            <section class="video-section">
+                <div class="video-header">
+                    <div>
+                        <h1 class="video-title">Advanced Neural Networks in Computer Vision</h1>
+                        <div class="video-meta">
+                            <span class="badge premium">Premium</span>
+                            <span class="badge expert">Expert Level</span>
+                            <span>Dr. Sarah Chen</span>
+                            <span>•</span>
+                            <span>45 min</span>
+                            <span>•</span>
+                            <span>Video 7 of 12</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-player-container">
+                    <div class="video-player">
+                        Advanced Neural Networks Tutorial - Video Player
+                    </div>
+                    <div class="play-overlay" onclick="playVideo()">
+                        <svg class="play-icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7L8 5z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="video-controls">
+                    <button class="nav-button" onclick="previousVideo()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                        Previous
+                    </button>
+                    
+                    <div class="progress-indicator">
+                        <strong>Video 7 of 12</strong> in Advanced Computer Vision Series
+                    </div>
+                    
+                    <button class="nav-button" onclick="nextVideo()">
+                        Next
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Chat-like Discussion Section -->
+            <section class="discussion-section">
+                <div class="discussion-header">
+                    <div class="instructor-avatar">SC</div>
+                    <div class="instructor-info">
+                        <h4>Dr. Sarah Chen</h4>
+                        <span>Lead AI Researcher • Online now</span>
+                    </div>
+                </div>
+
+                <div class="messages" id="messages">
+                    <div class="message">
+                        <div class="message-avatar">SC</div>
+                        <div class="message-content">
+                            <div class="message-author">Dr. Sarah Chen</div>
+                            <div class="message-text">Welcome to our deep dive into advanced neural network architectures! In this session, we'll explore how convolutional layers process visual information and the mathematics behind backpropagation in deep networks.</div>
+                            <div class="message-time">2 hours ago</div>
+                        </div>
+                    </div>
+
+                    <div class="message">
+                        <div class="message-avatar">AM</div>
+                        <div class="message-content">
+                            <div class="message-author">Alex Martinez</div>
+                            <div class="message-text">Dr. Chen, could you elaborate on the gradient flow in ResNet architectures? I'm having trouble understanding how skip connections prevent vanishing gradients.</div>
+                            <div class="message-time">1 hour ago</div>
+                        </div>
+                    </div>
+
+                    <div class="message">
+                        <div class="message-avatar">SC</div>
+                        <div class="message-content">
+                            <div class="message-author">Dr. Sarah Chen</div>
+                            <div class="message-text">Great question, Alex! Skip connections create alternative pathways for gradients to flow. When we have F(x) + x, the gradient of x has a direct path backwards, preventing the multiplication of many small gradients that causes vanishing. I'll demonstrate this visually at timestamp 23:45.</div>
+                            <div class="message-time">45 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="message">
+                        <div class="message-avatar">LK</div>
+                        <div class="message-content">
+                            <div class="message-author">Lisa Kim</div>
+                            <div class="message-text">The attention mechanism explanation was brilliant! How does this relate to transformer architectures in vision tasks?</div>
+                            <div class="message-time">30 minutes ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <aside class="sidebar">
+            <!-- Series Videos -->
+            <div class="sidebar-section">
+                <h3 class="section-title">Course Series</h3>
+                <div class="series-videos">
+                    <div class="series-video">
+                        <div class="video-thumbnail">1</div>
+                        <div class="video-info">
+                            <h5>Introduction to Computer Vision</h5>
+                            <div class="video-duration">32 min • Completed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="series-video">
+                        <div class="video-thumbnail">2</div>
+                        <div class="video-info">
+                            <h5>Image Processing Fundamentals</h5>
+                            <div class="video-duration">28 min • Completed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="series-video">
+                        <div class="video-thumbnail">3</div>
+                        <div class="video-info">
+                            <h5>Convolutional Neural Networks</h5>
+                            <div class="video-duration">41 min • Completed</div>
+                        </div>
+                    </div>
+
+                    <div class="series-video current">
+                        <div class="video-thumbnail">7</div>
+                        <div class="video-info">
+                            <h5>Advanced Neural Networks</h5>
+                            <div class="video-duration">45 min • Watching</div>
+                        </div>
+                    </div>
+                    
+                    <div class="series-video">
+                        <div class="video-thumbnail">8</div>
+                        <div class="video-info">
+                            <h5>Object Detection Algorithms</h5>
+                            <div class="video-duration">52 min • Next</div>
+                        </div>
+                    </div>
+                    
+                    <div class="series-video">
+                        <div class="video-thumbnail">9</div>
+                        <div class="video-info">
+                            <h5>Semantic Segmentation</h5>
+                            <div class="video-duration">38 min • Locked</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="sidebar-section">
+                <h3 class="section-title">Actions</h3>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="shareVideo()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92S19.61 16.08 18 16.08z"/>
+                        </svg>
+                        Share
+                    </button>
+                    
+                    <button class="action-btn" onclick="messageInstructor()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        Message
+                    </button>
+                    
+                    <button class="action-btn" onclick="addToBookmarks()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        Bookmark
+                    </button>
+                    
+                    <button class="action-btn" onclick="downloadNotes()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                        Notes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="sidebar-section">
+                <h3 class="section-title">Recommended</h3>
+                <div class="recommendations">
+                    <div class="recommendation" onclick="openRecommendation(1)">
+                        <div class="rec-thumbnail"></div>
+                        <div class="rec-info">
+                            <h6>Deep Learning Optimization Techniques</h6>
+                            <div class="rec-meta">Dr. Michael Zhang • 38 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation" onclick="openRecommendation(2)">
+                        <div class="rec-thumbnail"></div>
+                        <div class="rec-info">
+                            <h6>Transformer Architecture Deep Dive</h6>
+                            <div class="rec-meta">Prof. Emma Watson • 42 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation" onclick="openRecommendation(3)">
+                        <div class="rec-thumbnail"></div>
+                        <div class="rec-info">
+                            <h6>Advanced GANs and Applications</h6>
+                            <div class="rec-meta">Dr. James Liu • 35 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation" onclick="openRecommendation(4)">
+                        <div class="rec-thumbnail"></div>
+                        <div class="rec-info">
+                            <h6>Real-time Object Tracking</h6>
+                            <div class="rec-meta">Sarah Johnson • 29 min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Floating particles animation
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Video controls
+        function playVideo() {
+            const overlay = document.querySelector('.play-overlay');
+            overlay.style.display = 'none';
+            // Here you would integrate with your actual video player
+            console.log('Playing video...');
+        }
+
+        function previousVideo() {
+            console.log('Going to previous video...');
+            // Add navigation logic
+        }
+
+        function nextVideo() {
+            console.log('Going to next video...');
+            // Add navigation logic
+        }
+
+        // Action button functions
+        function shareVideo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Advanced Neural Networks in Computer Vision',
+                    text: 'Check out this amazing computer vision course!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback to copy link
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('Link copied to clipboard!');
+            }
+        }
+
+        function messageInstructor() {
+            console.log('Opening message dialog...');
+            showNotification('Message feature coming soon!');
+        }
+
+        function addToBookmarks() {
+            console.log('Adding to bookmarks...');
+            showNotification('Added to bookmarks!');
+        }
+
+        function downloadNotes() {
+            console.log('Downloading notes...');
+            showNotification('Notes downloaded!');
+        }
+
+        function openRecommendation(id) {
+            console.log(`Opening recommendation ${id}`);
+        }
+
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #00d4ff, #0099cc);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS for notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Auto-scroll messages
+        function autoScrollMessages() {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Simulate new messages arriving
+        function addNewMessage(author, avatar, content, isInstructor = false) {
+            const messagesContainer = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-author">${author}</div>
+                    <div class="message-text">${content}</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            autoScrollMessages();
+        }
+
+        // Interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to series videos
+            const seriesVideos = document.querySelectorAll('.series-video');
+            seriesVideos.forEach(video => {
+                video.addEventListener('click', function() {
+                    // Remove current class from all videos
+                    seriesVideos.forEach(v => v.classList.remove('current'));
+                    // Add current class to clicked video
+                    this.classList.add('current');
+                    
+                    // Update main video content
+                    const videoTitle = this.querySelector('h5').textContent;
+                    document.querySelector('.video-title').textContent = videoTitle;
+                    
+                    showNotification(`Now playing: ${videoTitle}`);
+                });
+            });
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    previousVideo();
+                } else if (e.key === 'ArrowRight') {
+                    nextVideo();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    playVideo();
+                }
+            });
+
+            // Simulate live chat updates
+            setTimeout(() => {
+                addNewMessage('Dr. Sarah Chen', 'SC', 'Remember to check the supplementary materials for this section. The mathematical proofs are detailed in the PDF notes.', true);
+            }, 10000);
+
+            setTimeout(() => {
+                addNewMessage('Jordan Smith', 'JS', 'This is exactly what I needed for my thesis! The explanation of attention mechanisms is crystal clear.');
+            }, 20000);
+
+            // Progress tracking
+            let watchProgress = 0;
+            const progressInterval = setInterval(() => {
+                watchProgress += 1;
+                if (watchProgress >= 100) {
+                    clearInterval(progressInterval);
+                    showNotification('Video completed! Moving to next lesson...');
+                }
+            }, 1000);
+        });
+
+        // Advanced interactions
+        function toggleFullscreen() {
+            const videoContainer = document.querySelector('.video-player-container');
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Video speed controls
+        let playbackSpeed = 1.0;
+        function changeSpeed(speed) {
+            playbackSpeed = speed;
+            showNotification(`Playback speed: ${speed}x`);
+        }
+
+        // Bookmark timestamps
+        const bookmarks = [];
+        function addTimestampBookmark() {
+            const currentTime = '15:23'; // This would come from actual video player
+            bookmarks.push(currentTime);
+            showNotification(`Bookmark added at ${currentTime}`);
+        }
+
+        // Social sharing
+        function shareToSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('Advanced Neural Networks in Computer Vision - Amazing course!');
+            
+            let shareUrl;
+            switch(platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+                    break;
+                case 'linkedin':
+                    shareUrl = `https://linkedin.com/sharing/share-offsite/?url=${url}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        }
+
+        // Advanced search in series
+        function searchInSeries(query) {
+            const videos = document.querySelectorAll('.series-video');
+            videos.forEach(video => {
+                const title = video.querySelector('h5').textContent.toLowerCase();
+                if (title.includes(query.toLowerCase())) {
+                    video.style.display = 'flex';
+                    video.style.background = 'rgba(0, 212, 255, 0.1)';
+                } else {
+                    video.style.display = query ? 'none' : 'flex';
+                    video.style.background = '';
+                }
+            });
+        }
+
+        // Performance monitoring
+        const performanceMetrics = {
+            loadTime: performance.now(),
+            interactions: 0
+        };
+
+        // Track user interactions
+        document.addEventListener('click', () => {
+            performanceMetrics.interactions++;
+        });
+
+        // Accessibility enhancements
+        function setupAccessibility() {
+            // Keyboard navigation for video controls
+            const focusableElements = document.querySelectorAll('button, .series-video, .recommendation');
+            
+            focusableElements.forEach(element => {
+                element.setAttribute('tabindex', '0');
+                
+                element.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // Screen reader announcements
+            const announcer = document.createElement('div');
+            announcer.setAttribute('aria-live', 'polite');
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.style.position = 'absolute';
+            announcer.style.left = '-10000px';
+            announcer.style.width = '1px';
+            announcer.style.height = '1px';
+            announcer.style.overflow = 'hidden';
+            document.body.appendChild(announcer);
+
+            window.announce = function(message) {
+                announcer.textContent = message;
+            };
+        }
+
+        setupAccessibility();
+
+        // Initialize everything
+        console.log('Advanced Video Research Platform initialized successfully!');
+        console.log('Features loaded: Video player, chat system, series navigation, recommendations, social sharing');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTopics.ng - Premium Research Topics & Academic Resources</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --accent-color: #ea4335;
+            --dark-color: #202124;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e8eaed;
+            --text-color: #3c4043;
+            --border-radius: 12px;
+            --shadow-light: 0 2px 16px rgba(0,0,0,0.1);
+            --shadow-medium: 0 4px 24px rgba(0,0,0,0.15);
+            --shadow-heavy: 0 8px 32px rgba(0,0,0,0.2);
+            --gradient-primary: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+            --gradient-secondary: linear-gradient(135deg, #34a853 0%, #0f9d58 100%);
+            --gradient-hero: linear-gradient(135deg, rgba(26,115,232,0.05) 0%, rgba(66,133,244,0.05) 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: white;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--medium-gray);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-light);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: var(--light-gray);
+            color: var(--primary-color);
+        }
+
+        .gift-plan-btn {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: giftPulse 3s infinite;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .gift-plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        @keyframes giftPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-login {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: var(--light-gray);
+        }
+
+        .btn-signup {
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-hero);
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="500" cy="500" r="500" fill="url(%23a)"/></svg>') center/cover;
+            opacity: 0.5;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-color);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .cta-secondary {
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--light-gray);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .feature-description {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background: var(--dark-color);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--light-gray);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .service-card:hover {
+            background: white;
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .service-description {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-link:hover {
+            gap: 1rem;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            padding: 80px 0;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+        }
+
+        .newsletter-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .newsletter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            min-width: 250px;
+        }
+
+        .newsletter-btn {
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+            padding-left: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-color);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            min-height: 500px;
+        }
+
+        .modal-image {
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        .modal-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .modal-link {
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .features-modal .modal-content {
+            max-width: 1000px;
+        }
+
+        .features-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .feature-item i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .feature-item:hover i {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-input {
+                min-width: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                height: 60px;
+            }
+
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .feature-card,
+            .service-card {
+                padding: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">
+                <img src="logo-placeholder.png" alt="MyTopics.ng Logo" />
+                MyTopics.ng
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link" onclick="openModal('aboutModal')">About Us</a>
+                <a href="#" class="nav-link">Hire Us</a>
+                <a href="#" class="nav-link" onclick="openModal('featuresModal')">Our Features</a>
+                <a href="#" class="gift-plan-btn">
+                    <i class="fas fa-gift"></i>
+                    Gift a Plan
+                </a>
+                <div class="auth-buttons">
+                    <a href="login.php" class="btn-login">Login</a>
+                    <a href="signup.php" class="btn-signup">Sign Up</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title fade-in-up">Transform Your Academic Journey</h1>
+            <p class="hero-subtitle fade-in-up">Access premium research topics, comprehensive resources, and expert guidance to excel in your academic pursuits.</p>
+            <div class="hero-cta fade-in-up">
+                <a href="signup.php" class="cta-primary">
+                    <i class="fas fa-rocket"></i>
+                    Start Your Journey
+                </a>
+                <a href="#features" class="cta-secondary">
+                    <i class="fas fa-play"></i>
+                    Explore Features
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title reveal">Why Choose MyTopics.ng?</h2>
+            <p class="section-subtitle reveal">Comprehensive academic resources designed to accelerate your research and academic success.</p>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Topic Suggestions</h3>
+                    <p class="feature-description">AI-powered topic recommendations based on your field of study, academic level, and research interests.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="feature-title">Comprehensive Database</h3>
+                    <p class="feature-description">Access thousands of verified research topics across multiple disciplines and academic levels.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Expert Guidance</h3>
+                    <p class="feature-description">Connect with experienced researchers and academic professionals for personalized support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <span class="stat-number">10,000+</span>
+                    <span class="stat-label">Research Topics</span>
+                </div>
+                <div class="stat-item reveal">
+                    <span class="stat-number">5,000+</span>
+                    <span class="stat-label">Active Students</span>
+                </div>
+                <div class="stat-item reveal">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Academic Fields</span>
+                </div>
+                <div class="stat-item reveal">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Success Rate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title reveal">Our Services</h2>
+            <p class="section-subtitle reveal">Comprehensive academic support tailored to your needs.</p>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="service-title">Topic Research</h3>
+                    <p class="service-description">Find the perfect research topic for your thesis, dissertation, or project with our extensive database.</p>
+                    <a href="#" class="service-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="service-title">Academic Writing</h3>
+                    <p class="service-description">Professional writing assistance for abstracts, literature reviews, and complete research papers.</p>
+                    <a href="#" class="service-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="service-title">Data Analysis</h3>
+                    <p class="service-description">Expert statistical analysis and interpretation services for your research data.</p>
+                    <a href="#" class="service-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2 class="newsletter-title reveal">Stay Updated</h2>
+                <p class="newsletter-subtitle reveal">Get the latest research topics, academic tips, and exclusive resources delivered to your inbox.</p>
+                <form class="newsletter-form reveal">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MyTopics.ng</h3>
+                    <p>Empowering academic excellence through innovative research solutions and comprehensive educational resources.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Research Topics</a></li>
+                        <li><a href="#">Academic Writing</a></li>
+                        <li><a href="#">Data Analysis</a></li>
+                        <li><a href="#">Consultation</a></li>
+                        <li><a href="#">Premium Plans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Code of Conduct</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MyTopics.ng. All rights reserved. | Designed with ❤️ for Academic Excellence</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- About Us Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">About MyTopics.ng</h2>
+                <button class="modal-close" onclick="closeModal('aboutModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <div style="text-align: center; color: var(--text-color);">
+                        <i class="fas fa-graduation-cap" style="font-size: 4rem; margin-bottom: 1rem; color: var(--primary-color);"></i>
+                        <p>Empowering Academic Excellence</p>
+                    </div>
+                </div>
+                <div class="modal-links">
+                    <a href="#" class="modal-link">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <strong>Our Vision</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">To be the leading platform for academic research excellence.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="modal-link">
+                        <i class="fas fa-bullseye"></i>
+                        <div>
+                            <strong>Our Mission</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Providing comprehensive research resources and expert guidance.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="modal-link">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>Our Team</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Meet the experts dedicated to your academic success.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="modal-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Privacy Policy</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">How we protect and handle your personal information.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="modal-link">
+                        <i class="fas fa-gavel"></i>
+                        <div>
+                            <strong>Code of Conduct</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Our commitment to ethical academic practices.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="modal-link">
+                        <i class="fas fa-certificate"></i>
+                        <div>
+                            <strong>Transparency Report</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Our commitment to openness and accountability.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Modal -->
+    <div class="modal features-modal" id="featuresModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Our Premium Features</h2>
+                <button class="modal-close" onclick="closeModal('featuresModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <div style="text-align: center; color: var(--text-color);">
+                        <i class="fas fa-rocket" style="font-size: 4rem; margin-bottom: 1rem; color: var(--primary-color);"></i>
+                        <p>Advanced Academic Tools</p>
+                    </div>
+                </div>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-brain"></i>
+                        <div>
+                            <strong>AI-Powered Topic Generation</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Smart algorithms suggest relevant topics based on your field</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <strong>Comprehensive Topic Database</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">10,000+ verified research topics across all disciplines</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-file-alt"></i>
+                        <div>
+                            <strong>Abstract & Literature Review Templates</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Professional templates to jumpstart your research</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-search"></i>
+                        <div>
+                            <strong>DOI & PubMed Integration</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Direct access to academic journals and publications</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <div>
+                            <strong>Research Analytics Dashboard</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Track your research progress and milestones</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>Expert Consultation</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Connect with experienced researchers and mentors</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-cloud-download-alt"></i>
+                        <div>
+                            <strong>Downloadable Resources</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Save and download research materials for offline use</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div>
+                            <strong>Mobile-Optimized Platform</strong>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Access your research tools anywhere, anytime</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Scroll reveal animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', reveal);
+        
+        // Initialize reveal on page load
+        reveal();
+
+        // Newsletter form submission
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            if (email) {
+                alert('Thank you for subscribing! You will receive our latest updates soon.');
+                this.reset();
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation for buttons
+        document.querySelectorAll('.cta-primary, .cta-secondary, .btn-signup').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+                
+                // Add loading effect
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                this.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.pointerEvents = 'auto';
+                }, 2000);
+            });
+        });
+
+        // Gift plan button animation enhancement
+        const giftBtn = document.querySelector('.gift-plan-btn');
+        if (giftBtn) {
+            giftBtn.addEventListener('mouseenter', function() {
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = 'giftPulse 3s infinite';
+                }, 100);
+            });
+        }
+
+        // Stats counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = parseInt(counter.getAttribute('data-target') || counter.innerText.replace(/[^\d]/g, ''));
+                    const count = parseInt(counter.innerText.replace(/[^\d]/g, '') || 0);
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc).toLocaleString() + 
+                                          (counter.innerText.includes('+') ? '+' : '') +
+                                          (counter.innerText.includes('%') ? '%' : '');
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target.toLocaleString() + 
+                                          (counter.innerText.includes('+') ? '+' : '') +
+                                          (counter.innerText.includes('%') ? '%' : '');
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const statsSection = document.querySelector('.stats');
+        let hasAnimated = false;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasAnimated) {
+                    animateCounters();
+                    hasAnimated = true;
+                }
+            });
+        });
+
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+
+        // Add hover effects to feature cards
+        document.querySelectorAll('.feature-card, .service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect on page load
+        window.addEventListener('load', function() {
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                const originalText = heroTitle.innerText;
+                setTimeout(() => {
+                    typeWriter(heroTitle, originalText, 50);
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

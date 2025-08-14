@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles - MyTopics.ng</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+  /* Hero Banner Section */
+        .hero-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .premium-cta {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .premium-cta h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #667eea;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: #f8fafc;
+            padding: 20px 0;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .filter-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 8px 20px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-tab.active, .filter-tab:hover {
+            background: #667eea;
+            color: #fff;
+            border-color: #667eea;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 10px 40px 10px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            width: 300px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+        /* Featured Articles Slider */
+        .featured-section {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #2c3e50;
+        }
+
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slider-slide {
+            min-width: 25%;
+            padding: 0 10px;
+        }
+
+        .featured-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .featured-card:hover .featured-image {
+            transform: scale(1.05);
+        }
+
+        .featured-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .featured-category {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+            width: fit-content;
+        }
+
+        .featured-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        .featured-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: auto;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .article-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Slider Controls */
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: #667eea;
+            transform: scale(1.2);
+        }
+
+        /* Main Articles Section */
+        .main-articles {
+            padding: 60px 0;
+        }
+
+        .articles-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .article-content {
+            padding: 20px;
+        }
+
+        .article-category {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .article-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .article-excerpt {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .sidebar-article {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-article:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .sidebar-image {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-content {
+            flex-grow: 1;
+        }
+
+        .sidebar-article-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.3;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-meta {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* Load More Button */
+        .load-more {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .btn-load-more {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-load-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-load-more:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .articles-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .stats-row {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .premium-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .slider-slide {
+                min-width: 100%;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.6s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+         @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero-banner {
+                padding: 40px 0;
+            }
+            
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Banner -->
+
+     <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Discover Knowledge</h1>
+                    <p>Explore our comprehensive collection of articles, research papers, and insights from industry experts. Stay ahead with the latest trends and discoveries.</p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">2,847</span>
+                            <span class="stat-label">Total Articles</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">189K</span>
+                            <span class="stat-label">Monthly Readers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Fresh Content</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="premium-cta">
+                    <h3><i class="fas fa-crown"></i> Premium Access</h3>
+                    <p>Unlock exclusive content, advanced search features, and ad-free reading experience.</p>
+                    <div class="cta-buttons">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-star"></i> Upgrade Now
+                        </a>
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-gift"></i> Gift a Plan
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="filter-bar">
+        <div class="container">
+            <div class="filter-content">
+                <div class="filter-tabs">
+                    <div class="filter-tab active" data-category="all">All Articles</div>
+                    <div class="filter-tab" data-category="technology">Technology</div>
+                    <div class="filter-tab" data-category="science">Science</div>
+                    <div class="filter-tab" data-category="business">Business</div>
+                    <div class="filter-tab" data-category="education">Education</div>
+                    <div class="filter-tab" data-category="health">Health</div>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search articles..." id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Articles Slider -->
+    <section class="featured-section">
+        <div class="container">
+            <h2 class="section-title">Featured Articles</h2>
+            <div class="slider-container">
+                <div class="slider-wrapper" id="sliderWrapper">
+                    <!-- Slide 1 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop&crop=face" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Computer Science</span>
+                                <h3 class="featured-title">The Future of Artificial Intelligence in Academic Research</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">JD</div>
+                                        <span>Dr. Jane Doe</span>
+                                    </div>
+                                    <span>Dec 15, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 2.5K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 8 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Biology</span>
+                                <h3 class="featured-title">Revolutionary Gene Therapy Approaches in Modern Medicine</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">MS</div>
+                                        <span>Prof. Mike Smith</span>
+                                    </div>
+                                    <span>Dec 14, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 1.8K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 12 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Economics</span>
+                                <h3 class="featured-title">Sustainable Economic Models for Developing Nations</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">AL</div>
+                                        <span>Dr. Anna Lee</span>
+                                    </div>
+                                    <span>Dec 13, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 3.2K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 15 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 4 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Psychology</span>
+                                <h3 class="featured-title">Cognitive Behavioral Patterns in Digital Age Learning</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">RJ</div>
+                                        <span>Dr. Robert Johnson</span>
+                                    </div>
+                                    <span>Dec 12, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 1.9K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 10 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 5 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Engineering</span>
+                                <h3 class="featured-title">Sustainable Architecture and Green Building Technologies</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">EM</div>
+                                        <span>Prof. Emily Chen</span>
+                                    </div>
+                                    <span>Dec 11, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 2.7K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 14 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 6 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Literature</span>
+                                <h3 class="featured-title">Post-Colonial Narratives in Contemporary African Literature</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">KW</div>
+                                        <span>Dr. Kwame Wilson</span>
+                                    </div>
+                                    <span>Dec 10, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 1.4K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 11 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 7 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Physics</span>
+                                <h3 class="featured-title">Quantum Computing Applications in Cryptography</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">TR</div>
+                                        <span>Prof. Tom Richards</span>
+                                    </div>
+                                    <span>Dec 9, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 3.5K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 16 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 8 -->
+                    <div class="slider-slide">
+                        <div class="featured-card">
+                            <img src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=200&fit=crop" alt="Article" class="featured-image">
+                            <div class="featured-content">
+                                <span class="featured-category">Environmental Science</span>
+                                <h3 class="featured-title">Climate Change Mitigation Through Urban Planning</h3>
+                                <div class="featured-meta">
+                                    <div class="author-info">
+                                        <div class="author-avatar">SG</div>
+                                        <span>Dr. Sarah Green</span>
+                                    </div>
+                                    <span>Dec 8, 2024</span>
+                                </div>
+                                <div class="article-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> 2.1K</span>
+                                    <span class="stat"><i class="fas fa-clock"></i> 13 min read</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls" id="sliderControls">
+                <span class="slider-dot active" data-slide="0"></span>
+                <span class="slider-dot" data-slide="1"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Articles Section -->
+    <section class="main-articles">
+        <div class="container">
+            <div class="articles-layout">
+                <div class="articles-main">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 40px;">Latest Articles</h2>
+                    <div class="articles-grid" id="articlesGrid">
+                        <!-- Articles will be loaded here -->
+                    </div>
+                    <div class="load-more">
+                        <button class="btn-load-more" id="loadMoreBtn">
+                            <span class="btn-text">Load More Articles</span>
+                            <div class="loading-spinner" id="loadingSpinner"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <h3 class="sidebar-title">Trending Now</h3>
+                    <div class="sidebar-article">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=80&h=60&fit=crop" alt="Trending" class="sidebar-image">
+                        <div class="sidebar-content">
+                            <h4 class="sidebar-article-title">Machine Learning in Healthcare Diagnostics</h4>
+                            <div class="sidebar-meta">5.2K views • 2 days ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-article">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=80&h=60&fit=crop" alt="Trending" class="sidebar-image">
+                        <div class="sidebar-content">
+                            <h4 class="sidebar-article-title">Blockchain Technology in Academic Verification</h4>
+                            <div class="sidebar-meta">3.8K views • 3 days ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-article">
+                        <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=80&h=60&fit=crop" alt="Trending" class="sidebar-image">
+                        <div class="sidebar-content">
+                            <h4 class="sidebar-article-title">Renewable Energy Solutions for Developing Countries</h4>
+                            <div class="sidebar-meta">4.1K views • 4 days ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-article">
+                        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=80&h=60&fit=crop" alt="Trending" class="sidebar-image">
+                        <div class="sidebar-content">
+                            <h4 class="sidebar-article-title">Digital Transformation in Educational Institutions</h4>
+                            <div class="sidebar-meta">2.9K views • 5 days ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-article">
+                        <img src="https://images.unsplash.com/photo-1559757164-f9d028e290a8?w=80&h=60&fit=crop" alt="Trending" class="sidebar-image">
+                        <div class="sidebar-content">
+                            <h4 class="sidebar-article-title">Neuroplasticity and Adult Learning Mechanisms</h4>
+                            <div class="sidebar-meta">3.3K views • 6 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Sample articles data
+        const articlesData = [
+            {
+                id: 1,
+                title: "Advanced Data Structures in Computer Science Research",
+                excerpt: "Exploring cutting-edge data structures that are revolutionizing computational efficiency in modern research applications.",
+                category: "Computer Science",
+                author: "Dr. Alex Thompson",
+                authorInitials: "AT",
+                date: "Dec 18, 2024",
+                readTime: "7 min read",
+                views: "1.2K",
+                image: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=200&fit=crop"
+            },
+            {
+                id: 2,
+                title: "Sustainable Development Goals: Progress and Challenges",
+                excerpt: "A comprehensive analysis of global progress toward achieving the UN Sustainable Development Goals by 2030.",
+                category: "Environmental Science",
+                author: "Prof. Maria Santos",
+                authorInitials: "MS",
+                date: "Dec 17, 2024",
+                readTime: "12 min read",
+                views: "2.8K",
+                image: "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e3?w=400&h=200&fit=crop"
+            },
+            {
+                id: 3,
+                title: "The Role of Microfinance in Poverty Alleviation",
+                excerpt: "Examining how microfinance institutions are transforming economic opportunities in developing communities worldwide.",
+                category: "Economics",
+                author: "Dr. James Wilson",
+                authorInitials: "JW",
+                date: "Dec 16, 2024",
+                readTime: "9 min read",
+                views: "1.9K",
+                image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=200&fit=crop"
+            },
+            {
+                id: 4,
+                title: "CRISPR Technology: Ethical Considerations in Gene Editing",
+                excerpt: "Analyzing the ethical implications and regulatory frameworks surrounding CRISPR gene editing technology.",
+                category: "Biology",
+                author: "Dr. Lisa Chen",
+                authorInitials: "LC",
+                date: "Dec 15, 2024",
+                readTime: "11 min read",
+                views: "3.5K",
+                image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop"
+            },
+            {
+                id: 5,
+                title: "Digital Humanities: Transforming Literary Analysis",
+                excerpt: "How computational methods are revolutionizing the study of literature and cultural texts in the digital age.",
+                category: "Literature",
+                author: "Prof. David Park",
+                authorInitials: "DP",
+                date: "Dec 14, 2024",
+                readTime: "8 min read",
+                views: "1.7K",
+                image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop"
+            },
+            {
+                id: 6,
+                title: "Quantum Mechanics Applications in Modern Computing",
+                excerpt: "Exploring the practical applications of quantum mechanical principles in next-generation computing systems.",
+                category: "Physics",
+                author: "Dr. Sarah Kim",
+                authorInitials: "SK",
+                date: "Dec 13, 2024",
+                readTime: "14 min read",
+                views: "2.3K",
+                image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=200&fit=crop"
+            },
+            {
+                id: 7,
+                title: "Social Media's Impact on Political Discourse",
+                excerpt: "A comprehensive study on how social media platforms are reshaping political communication and public engagement.",
+                category: "Political Science",
+                author: "Prof. Michael Brown",
+                authorInitials: "MB",
+                date: "Dec 12, 2024",
+                readTime: "10 min read",
+                views: "4.1K",
+                image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=200&fit=crop"
+            },
+            {
+                id: 8,
+                title: "Neural Networks in Medical Diagnosis",
+                excerpt: "Investigating how artificial neural networks are improving diagnostic accuracy in healthcare applications.",
+                category: "Medicine",
+                author: "Dr. Rachel Lee",
+                authorInitials: "RL",
+                date: "Dec 11, 2024",
+                readTime: "13 min read",
+                views: "2.9K",
+                image: "https://images.unsplash.com/photo-1559757164-f9d028e290a8?w=400&h=200&fit=crop"
+            },
+            {
+                id: 9,
+                title: "Climate Change and Agricultural Productivity",
+                excerpt: "Analyzing the impact of climate change on global agricultural systems and food security challenges.",
+                category: "Agriculture",
+                author: "Prof. John Garcia",
+                authorInitials: "JG",
+                date: "Dec 10, 2024",
+                readTime: "15 min read",
+                views: "3.8K",
+                image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&h=200&fit=crop"
+            },
+            {
+                id: 10,
+                title: "Virtual Reality in Educational Psychology",
+                excerpt: "Exploring how VR technology is being integrated into educational psychology research and practice.",
+                category: "Psychology",
+                author: "Dr. Emma Johnson",
+                authorInitials: "EJ",
+                date: "Dec 9, 2024",
+                readTime: "6 min read",
+                views: "1.5K",
+                image: "https://images.unsplash.com/photo-1592478411213-6153e4ebc696?w=400&h=200&fit=crop"
+            },
+            {
+                id: 11,
+                title: "Blockchain Applications Beyond Cryptocurrency",
+                excerpt: "Discovering innovative uses of blockchain technology in supply chain, healthcare, and academic verification.",
+                category: "Technology",
+                author: "Prof. Kevin Liu",
+                authorInitials: "KL",
+                date: "Dec 8, 2024",
+                readTime: "11 min read",
+                views: "2.7K",
+                image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=200&fit=crop"
+            },
+            {
+                id: 12,
+                title: "Postcolonial Theory in Contemporary Literature",
+                excerpt: "An examination of postcolonial literary theory and its relevance in analyzing modern global literature.",
+                category: "Literature",
+                author: "Dr. Amara Okafor",
+                authorInitials: "AO",
+                date: "Dec 7, 2024",
+                readTime: "9 min read",
+                views: "1.8K",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop"
+            }
+        ];
+
+        // Slider functionality
+        class FeaturedSlider {
+            constructor() {
+                this.slider = document.getElementById('sliderWrapper');
+                this.controls = document.getElementById('sliderControls');
+                this.currentSlide = 0;
+                this.totalSlides = 2; // We have 8 slides, showing 4 at a time, so 2 sets
+                this.autoPlayInterval = null;
+                this.isTransitioning = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.setupControls();
+                this.startAutoPlay();
+                this.setupHoverPause();
+            }
+
+            setupControls() {
+                const dots = this.controls.querySelectorAll('.slider-dot');
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        if (!this.isTransitioning) {
+                            this.goToSlide(index);
+                        }
+                    });
+                });
+            }
+
+            goToSlide(slideIndex) {
+                if (this.isTransitioning) return;
+                
+                this.isTransitioning = true;
+                this.currentSlide = slideIndex;
+                
+                const translateX = -slideIndex * 100;
+                this.slider.style.transform = `translateX(${translateX}%)`;
+                
+                // Update dots
+                const dots = this.controls.querySelectorAll('.slider-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === slideIndex);
+                });
+                
+                setTimeout(() => {
+                    this.isTransitioning = false;
+                }, 600);
+            }
+
+            nextSlide() {
+                const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+                this.goToSlide(nextIndex);
+            }
+
+            startAutoPlay() {
+                this.autoPlayInterval = setInterval(() => {
+                    this.nextSlide();
+                }, 5000);
+            }
+
+            stopAutoPlay() {
+                if (this.autoPlayInterval) {
+                    clearInterval(this.autoPlayInterval);
+                    this.autoPlayInterval = null;
+                }
+            }
+
+            setupHoverPause() {
+                const sliderContainer = document.querySelector('.slider-container');
+                sliderContainer.addEventListener('mouseenter', () => {
+                    this.stopAutoPlay();
+                });
+                
+                sliderContainer.addEventListener('mouseleave', () => {
+                    this.startAutoPlay();
+                });
+            }
+        }
+
+        // Articles management
+        class ArticlesManager {
+            constructor() {
+                this.articlesGrid = document.getElementById('articlesGrid');
+                this.loadMoreBtn = document.getElementById('loadMoreBtn');
+                this.loadingSpinner = document.getElementById('loadingSpinner');
+                this.currentPage = 0;
+                this.articlesPerPage = 6;
+                this.isLoading = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.loadInitialArticles();
+                this.setupLoadMore();
+                this.setupInfiniteScroll();
+            }
+
+            loadInitialArticles() {
+                const initialArticles = articlesData.slice(0, this.articlesPerPage);
+                this.renderArticles(initialArticles);
+                this.currentPage = 1;
+            }
+
+            renderArticles(articles) {
+                articles.forEach((article, index) => {
+                    const articleElement = this.createArticleElement(article);
+                    articleElement.style.animationDelay = `${index * 0.1}s`;
+                    articleElement.classList.add('fade-in');
+                    this.articlesGrid.appendChild(articleElement);
+                });
+            }
+
+            createArticleElement(article) {
+                const articleDiv = document.createElement('div');
+                articleDiv.className = 'article-card';
+                articleDiv.innerHTML = `
+                    <img src="${article.image}" alt="${article.title}" class="article-image" loading="lazy">
+                    <div class="article-content">
+                        <span class="article-category">${article.category}</span>
+                        <h3 class="article-title">${article.title}</h3>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <div class="article-meta">
+                            <div class="author-info">
+                                <div class="author-avatar">${article.authorInitials}</div>
+                                <span>${article.author}</span>
+                                <span>•</span>
+                                <span>${article.date}</span>
+                            </div>
+                            <div class="article-stats">
+                                <span class="stat"><i class="fas fa-eye"></i> ${article.views}</span>
+                                <span class="stat"><i class="fas fa-clock"></i> ${article.readTime}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return articleDiv;
+            }
+
+            async loadMoreArticles() {
+                if (this.isLoading) return;
+                
+                this.isLoading = true;
+                this.showLoading();
+                
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const startIndex = this.currentPage * this.articlesPerPage;
+                const endIndex = startIndex + this.articlesPerPage;
+                const newArticles = articlesData.slice(startIndex, endIndex);
+                
+                if (newArticles.length > 0) {
+                    this.renderArticles(newArticles);
+                    this.currentPage++;
+                } else {
+                    this.loadMoreBtn.textContent = 'No more articles';
+                    this.loadMoreBtn.disabled = true;
+                }
+                
+                this.hideLoading();
+                this.isLoading = false;
+            }
+
+            showLoading() {
+                const btnText = this.loadMoreBtn.querySelector('.btn-text');
+                btnText.style.display = 'none';
+                this.loadingSpinner.style.display = 'block';
+                this.loadMoreBtn.disabled = true;
+            }
+
+            hideLoading() {
+                const btnText = this.loadMoreBtn.querySelector('.btn-text');
+                btnText.style.display = 'inline';
+                this.loadingSpinner.style.display = 'none';
+                this.loadMoreBtn.disabled = false;
+            }
+
+            setupLoadMore() {
+                this.loadMoreBtn.addEventListener('click', () => {
+                    this.loadMoreArticles();
+                });
+            }
+
+            setupInfiniteScroll() {
+                let ticking = false;
+                
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const scrollPosition = window.innerHeight + window.scrollY;
+                            const documentHeight = document.documentElement.offsetHeight;
+                            
+                            if (scrollPosition >= documentHeight - 1000 && !this.isLoading && this.currentPage * this.articlesPerPage < articlesData.length) {
+                                this.loadMoreArticles();
+                            }
+                            
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+            }
+        }
+
+        // Animation observer
+        class AnimationObserver {
+            constructor() {
+                this.observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('fade-in');
+                            }
+                        });
+                    },
+                    { threshold: 0.1 }
+                );
+                
+                this.init();
+            }
+
+            init() {
+                const elementsToAnimate = document.querySelectorAll('.section-title, .featured-card, .sidebar');
+                elementsToAnimate.forEach(el => {
+                    this.observer.observe(el);
+                });
+            }
+        }
+
+        // Utility functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+
+        // Enhanced scroll effects
+        function setupScrollEffects() {
+            const premiumBanner = document.querySelector('.premium-banner');
+            let lastScrollY = window.scrollY;
+            
+            const handleScroll = throttle(() => {
+                const currentScrollY = window.scrollY;
+                
+                // Premium banner sticky effect
+                if (currentScrollY > 100) {
+                    premiumBanner.style.transform = 'translateY(-100%)';
+                } else {
+                    premiumBanner.style.transform = 'translateY(0)';
+                }
+                
+                // Parallax effect for hero banner
+                const heroSection = document.querySelector('.hero-banner');
+                if (currentScrollY < heroSection.offsetHeight) {
+                    heroSection.style.transform = `translateY(${currentScrollY * 0.5}px)`;
+                }
+                
+                lastScrollY = currentScrollY;
+            }, 16);
+            
+            window.addEventListener('scroll', handleScroll);
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize components
+            new FeaturedSlider();
+            new ArticlesManager();
+            new AnimationObserver();
+            
+            // Setup additional effects
+            setupScrollEffects();
+            
+            // Add smooth scrolling for internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Enhanced card hover effects
+            document.addEventListener('mouseover', function(e) {
+                if (e.target.closest('.article-card') || e.target.closest('.featured-card')) {
+                    const card = e.target.closest('.article-card') || e.target.closest('.featured-card');
+                    card.style.transform = 'translateY(-8px) scale(1.02)';
+                }
+            });
+            
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('.article-card') || e.target.closest('.featured-card')) {
+                    const card = e.target.closest('.article-card') || e.target.closest('.featured-card');
+                    card.style.transform = '';
+                }
+            });
+            
+            // Progressive image loading
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease';
+                        
+                        img.onload = () => {
+                            img.style.opacity = '1';
+                        };
+                        
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            // Observe all images for progressive loading
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                imageObserver.observe(img);
+            });
+            
+            // Add loading states for better UX
+            window.addEventListener('beforeunload', function() {
+                document.body.style.opacity = '0.7';
+            });
+            
+            // Performance monitoring
+            if ('performance' in window) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        const perfData = performance.getEntriesByType('navigation')[0];
+                        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+                    }, 0);
+                });
+            }
+        });
+
+        // Service Worker registration for PWA capabilities
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed');
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
